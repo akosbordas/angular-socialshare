@@ -46,6 +46,8 @@ angular.module('djds4rce.angular-socialshare', [])
 		return {
 			scope: {
 				callback: '=',
+				shareButtonText: '=',
+				countVisible: '=',
 				shares: '='
 			},
 			transclude: true,
@@ -57,11 +59,11 @@ angular.module('djds4rce.angular-socialshare', [])
 				'<i class="pluginButtonIcon img sp_plugin-button-2x sx_plugin-button-2x_favblue"></i>' +
 				'</button>' +
 				'</div>' +
-				'<span class="pluginButtonLabel">Share</span>' +
+				'<span class="pluginButtonLabel">{{shareButtonText}}</span>' +
 				'</div>' +
 				'</div>' +
 				'</div>' +
-				'<div class="facebookCount">' +
+				'<div ng-if="countVisible" class="facebookCount">' +
 				'<div class="pluginCountButton pluginCountNum">' +
 				'<span ng-transclude></span>' +
 				'</div>' +
