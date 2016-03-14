@@ -6,7 +6,7 @@
  *    * Copying is an act of love. Please copy.
  *     */
 
-angular.module('djds4rce.angular-socialshare', [])
+angular.module('djds4rce.angular-socialshare', ['djds4rce.angular-socialshare.templates'])
 	.factory('$FB', ['$window', function($window) {
 		return {
 			init: function(fbId) {
