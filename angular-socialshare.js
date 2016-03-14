@@ -47,28 +47,10 @@ angular.module('djds4rce.angular-socialshare', [])
 			scope: {
 				callback: '=',
 				shareButtonText: '=',
-				countVisible: '=',
 				shares: '='
 			},
 			transclude: true,
-			template: '<div class="facebookButton">' +
-				'<div class="pluginButton">' +
-				'<div class="pluginButtonContainer">' +
-				'<div class="pluginButtonImage">' +
-				'<button type="button">' +
-				'<i class="pluginButtonIcon img sp_plugin-button-2x sx_plugin-button-2x_favblue"></i>' +
-				'</button>' +
-				'</div>' +
-				'<span class="pluginButtonLabel">{{shareButtonText}}</span>' +
-				'</div>' +
-				'</div>' +
-				'</div>' +
-				'<div ng-if="countVisible" class="facebookCount">' +
-				'<div class="pluginCountButton pluginCountNum">' +
-				'<span ng-transclude></span>' +
-				'</div>' +
-				'<div class="pluginCountButtonNub"><s></s><i></i></div>' +
-				'</div>',
+			templateUrl: 'templates/facebook.html',
 			link: function(scope, element, attr) {
 				attr.$observe('url', function() {
 					if (attr.shares && attr.url) {
@@ -112,27 +94,11 @@ angular.module('djds4rce.angular-socialshare', [])
 		return {
 			scope: {
 				callback: '=',
+				shareButtonText: '=',
 				shares: '='
 			},
 			transclude: true,
-			template: '<div class="facebookButton">' +
-				'<div class="pluginButton">' +
-				'<div class="pluginButtonContainer">' +
-				'<div class="pluginButtonImage">' +
-				'<button type="button">' +
-				'<i class="pluginButtonIcon img sp_plugin-button-2x sx_plugin-button-2x_favblue"></i>' +
-				'</button>' +
-				'</div>' +
-				'<span class="pluginButtonLabel">Share</span>' +
-				'</div>' +
-				'</div>' +
-				'</div>' +
-				'<div class="facebookCount">' +
-				'<div class="pluginCountButton pluginCountNum">' +
-				'<span ng-transclude></span>' +
-				'</div>' +
-				'<div class="pluginCountButtonNub"><s></s><i></i></div>' +
-				'</div>',
+			templateUrl: 'templates/facebook-feed-share.html',
 			link: function(scope, element, attr) {
 				attr.$observe('url', function() {
 					if (attr.shares && attr.url) {
@@ -203,27 +169,11 @@ angular.module('djds4rce.angular-socialshare', [])
 	}]).directive('linkedin', ['$timeout', '$http', '$window', function($timeout, $http, $window) {
 		return {
 			scope: {
-				shares: '='
+				shares: '=',
+				shareButtonText: '='
 			},
 			transclude: true,
-			template: '<div class="linkedinButton">' +
-				'<div class="pluginButton">' +
-				'<div class="pluginButtonContainer">' +
-				'<div class="pluginButtonImage">in' +
-				'</div>' +
-				'<span class="pluginButtonLabel"><span>Share</span></span>' +
-				'</div>' +
-				'</div>' +
-				'</div>' +
-				'<div class="linkedinCount">' +
-				'<div class="pluginCountButton">' +
-				'<div class="pluginCountButtonRight">' +
-				'<div class="pluginCountButtonLeft">' +
-				'<span ng-transclude></span>' +
-				'</div>' +
-				'</div>' +
-				'</div>' +
-				'</div>',
+			templateUrl: 'templates/linkedin.html',
 			link: function(scope, element, attr) {
 				var renderLinkedinButton = debounce(function() {
 					if (attr.shares && attr.url) {
