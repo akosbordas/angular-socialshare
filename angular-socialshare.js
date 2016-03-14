@@ -52,6 +52,7 @@ angular.module('djds4rce.angular-socialshare', [])
 			transclude: true,
 			templateUrl: 'templates/facebook.html',
 			link: function(scope, element, attr) {
+				scope.shareButtonText = scope.shareButtonText || 'Share';
 				attr.$observe('url', function() {
 					if (attr.shares && attr.url) {
 						$http.get('https://api.facebook.com/method/links.getStats?urls=' + attr.url + '&format=json').success(function(res) {
@@ -100,6 +101,7 @@ angular.module('djds4rce.angular-socialshare', [])
 			transclude: true,
 			templateUrl: 'templates/facebook-feed-share.html',
 			link: function(scope, element, attr) {
+				scope.shareButtonText = scope.shareButtonText || 'Share';
 				attr.$observe('url', function() {
 					if (attr.shares && attr.url) {
 						$http.get('https://api.facebook.com/method/links.getStats?urls=' + attr.url + '&format=json').success(function(res) {
@@ -175,6 +177,7 @@ angular.module('djds4rce.angular-socialshare', [])
 			transclude: true,
 			templateUrl: 'templates/linkedin.html',
 			link: function(scope, element, attr) {
+				scope.shareButtonText = scope.shareButtonText || 'Share';
 				var renderLinkedinButton = debounce(function() {
 					if (attr.shares && attr.url) {
 						$http.jsonp('https://www.linkedin.com/countserv/count/share?url=' + attr.url + '&callback=JSON_CALLBACK&format=jsonp').success(function(res) {
