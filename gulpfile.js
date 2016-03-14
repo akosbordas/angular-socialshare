@@ -12,7 +12,7 @@ gulp.task('default', function(){
 
   gulp.src('templates/**/*.html')
       .pipe(templateCache('angular-socialshare.tpl.js',{
-        module:'angularSocialShareTemplates',
+        module:'djds4rce.angular-socialshare',
         transformUrl:function(url){
           return "templates/"+url;
         }
