@@ -5,30 +5,29 @@
  *   * ♡ CopyHeart 2014 by Dayanand Prabhu http://djds4rce.github.io
  *    * Copying is an act of love. Please copy.
  *     */
-
-angular.module('djds4rce.angular-socialshare').factory('TemplateService', function ($q, $templateCache, $compile, $http) {
-  return {
-    fetchTemplate: function (template) {
-      return $q.when($templateCache.get(template) || $http.get(template))
-        .then(function (res) {
-          if (angular.isObject(res)) {
-            $templateCache.put(template, res.data);
-            return res.data;
-          }
-          return res;
-        });
-    },
-
-    compileAndAppendContent: function (scope, element) {
-      var template = this.fetchTemplate(scope.templateUrl);
-      var content = $compile(template)(scope);
-      element.html(content);
-    }
-  };
-});
-
-
 angular.module('djds4rce.angular-socialshare', ['djds4rce.angular-socialshare.templates'])
+  .factory('TemplateService', [ '$q', '$templateCache', '$compile', '$http', function ($q, $templateCache, $compile, $http) {
+    return {
+      fetchTemplate: function (template) {
+        return $q.when($templateCache.get(template) || $http.get(template))
+          .then(function (res) {
+            if (angular.isObject(res)) {
+              $templateCache.put(template, res.data);
+              return res.data;
+            }
+            return res;
+          });
+      },
+
+      compileAndAppendContent: function (scope, element) {
+        this.fetchTemplate(scope.templateUrl).then(function(template) {
+          element.empty();
+          element.append(template);
+          $compile(element.contents())(scope);
+        });
+      }
+    };
+  }])
   .factory('$FB', ['$window', function ($window) {
     return {
       init: function (fbId) {
@@ -68,13 +67,17 @@ angular.module('djds4rce.angular-socialshare', ['djds4rce.angular-socialshare.te
     return {
       scope: {
         callback: '=',
-        shareButtonText: '=',
+        shareButtonText: '=?',
+        templateUrl: '=?',
         shares: '='
       },
       transclude: true,
-      templateUrl: 'templates/facebook.html',
+      templateUrl: 'templates/facebook-share.html',
       link: function (scope, element, attr) {
         scope.shareButtonText = scope.shareButtonText || 'Share';
+        if (scope.templateUrl) {
+          TemplateService.compileAndAppendContent(scope, element);
+        }
         attr.$observe('url', function () {
           if (attr.shares && attr.url) {
             $http.get('https://api.facebook.com/method/links.getStats?urls=' + attr.url + '&format=json').success(function (res) {
@@ -113,7 +116,7 @@ angular.module('djds4rce.angular-socialshare', ['djds4rce.angular-socialshare.te
         });
       }
     };
-  }]).directive('facebookFeedShare', ['$http', function ($http, TemplateService) {
+  }]).directive('facebookFeedShare', ['$http', 'TemplateService',  function ($http, TemplateService) {
     return {
       scope: {
         callback: '=',
@@ -128,7 +131,6 @@ angular.module('djds4rce.angular-socialshare', ['djds4rce.angular-socialshare.te
         if (scope.templateUrl) {
           TemplateService.compileAndAppendContent(scope, element);
         }
-
         attr.$observe('url', function () {
           if (attr.shares && attr.url) {
             $http.get('https://api.facebook.com/method/links.getStats?urls=' + attr.url + '&format=json').success(function (res) {
@@ -200,12 +202,16 @@ angular.module('djds4rce.angular-socialshare', ['djds4rce.angular-socialshare.te
     return {
       scope: {
         shares: '=',
-        shareButtonText: '='
+        shareButtonText: '=?',
+        templateUrl: '=?'
       },
       transclude: true,
-      templateUrl: 'templates/linkedin.html',
+      templateUrl: 'templates/linkedin-share.html',
       link: function (scope, element, attr) {
         scope.shareButtonText = scope.shareButtonText || 'Share';
+        if (scope.templateUrl) {
+          TemplateService.compileAndAppendContent(scope, element);
+        }
         var renderLinkedinButton = debounce(function () {
           if (attr.shares && attr.url) {
             $http.jsonp('https://www.linkedin.com/countserv/count/share?url=' + attr.url + '&callback=JSON_CALLBACK&format=jsonp').success(function (res) {
@@ -329,8 +335,14 @@ angular.module('djds4rce.angular-socialshare', ['djds4rce.angular-socialshare.te
     }
   }]).directive('pintrest', ['$window', '$timeout', function ($window, $timeout) {
     return {
-      template: '<a href="{{href}}" data-pin-do="{{pinDo}}" data-pin-config="{{pinConfig}}"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_gray_20.png" /></a>',
+      scope: {
+        templateUrl: '=?'
+      },
+      templateUrl: 'templates/pintrest-share.html',
       link: function (scope, element, attr) {
+        if (scope.templateUrl) {
+          TemplateService.compileAndAppendContent(scope, element);
+        }
         var pintrestButtonRenderer = debounce(function () {
           var pin_button = document.createElement("a");
           pin_button.setAttribute("href", '//www.pinterest.com/pin/create/button/?url=' + encodeURIComponent(attr.href) + '&media=' + encodeURIComponent(attr.img) + '&description=' + encodeURIComponent(attr.description));
